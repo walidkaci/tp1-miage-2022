@@ -1,22 +1,31 @@
 package com.acme.todolist.application.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Component;
 
-import com.acme.todolist.application.port.in.AddTodoItem;
-import com.acme.todolist.application.port.out.UpdateTodoItem;
+import com.acme.todolist.application.port.in.GetTodoItems;
+import com.acme.todolist.application.port.out.LoadTodoItem;
 import com.acme.todolist.domain.TodoItem;
 
 @Component
-public class AddTodoItemService implements AddTodoItem {
+public class GetTodoItemsService implements GetTodoItems {
 
-	private UpdateTodoItem updateTodoItem;
+	private LoadTodoItem loadTodoItem;
 
-	//A compléter
-	public AddTodoItemService(UpdateTodoItem updateTodoItem) {
+	@Inject
+	public GetTodoItemsService(LoadTodoItem loadTodoItem) {
+		this.loadTodoItem = loadTodoItem;
+
 	}
 
-	//A compléter	
-
+	@Override
+	public List<TodoItem> getAllTodoItems() {
+		return this.loadTodoItem.loadAllTodoItems().stream()
+				.map(item -> new TodoItem(item.getId(), item.getTime(), item.finalContent()))
+				.collect(Collectors.toList());
+	}
 }
